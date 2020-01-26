@@ -41,3 +41,14 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 --
 
 
+DROP TABLE IF EXISTS word_count;
+
+CREATE TABLE word_count AS
+SELECT collect_list(upper(letter))
+ FROM tbl0 LATERAL VIEW explode(c5) letter_ AS letter
+ group by c1;
+
+ 
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED COLLECTION ITEMS TERMINATED BY ':'
+SELECT * FROM word_count;

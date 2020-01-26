@@ -6,6 +6,14 @@
 -- Escriba el resultado a la carpeta `output` del directorio actual.
 --
 fs -rm -f -r output;
+fs -rm -f data.tsv
+fs -put data.tsv
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+lines= LOAD 'data.tsv' AS (line:CHARARRAY, date:CHARARRAY, number:INT);
+words = FOREACH lines GENERATE line;
+grouped = GROUP words BY line;
+wordcount = FOREACH grouped GENERATE group, COUNT(words);
+STORE wordcount INTO 'output';
+fs -get output/ .

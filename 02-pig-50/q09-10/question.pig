@@ -26,6 +26,12 @@
 -- Escriba el resultado a la carpeta `output` del directorio actual.
 -- 
 fs -rm -f -r output;
+fs -rm -f data.csv;
+fs -put data.csv;
 --
+data= LOAD 'data.csv' USING PigStorage(',');
+data = FOREACH data GENERATE $1, $2;
+STORE data INTO 'output' USING PigStorage('@');
+fs -get output/ .
 
 

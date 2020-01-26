@@ -27,3 +27,7 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+u1= FOREACH u GENERATE firstname, color;
+u2= FILTER u1 BY $1 == 'blue' OR $0 MATCHES '^[K].*';
+STORE u2 INTO 'output' USING PigStorage(',');
+fs -get output/ .

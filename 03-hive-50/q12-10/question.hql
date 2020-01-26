@@ -26,5 +26,15 @@ LOAD DATA LOCAL INPATH 'data.tsv' INTO TABLE t0;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+DROP TABLE IF EXISTS df1;
 
+CREATE TABLE df1 AS
+SELECT letter, key, COUNT(1) FROM (SELECT letter, c3 FROM t0 LATERAL VIEW explode(c2) letter_array AS letter) t0 
+LATERAL VIEW explode(c3) key_value AS key,value
+GROUP BY letter, key
+ORDER BY letter, key;
+
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM df1;
 

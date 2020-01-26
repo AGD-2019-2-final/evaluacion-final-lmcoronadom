@@ -40,4 +40,15 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+DROP TABLE IF EXISTS word_count;
+
+CREATE TABLE word_count AS
+SELECT c2, COLLECT_SET(c1) AS c1l
+FROM tbl0
+GROUP BY c2;
+ 
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+COLLECTION ITEMS TERMINATED BY ':'
+SELECT * FROM word_count;
 
